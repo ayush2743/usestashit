@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String   @id @default(cuid())
+  email           String   @unique
+  password        String
+  firstName       String   @map("first_name")
+  lastName        String   @map("last_name")
+  college         String
+  phone           String?
+  isVerified      Boolean  @default(false) @map("is_verified")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  products            Product[]
+  sentMessages        Message[]     @relation("SentMessages")
+  receivedMessages    Message[]     @relation("ReceivedMessages")
+  conversationsUser1  Conversation[] @relation("ConversationUser1")
+  conversationsUser2  Conversation[] @relation("ConversationUser2")
+
+  @@map("users")
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  sellerId    String      @map("seller_id")
+  title       String
+  description String?
+  price       Decimal     @db.Decimal(10, 2)
+  condition   Condition
+  category    Category
+  images      String[]    @default([])
+  isAvailable Boolean     @default(true) @map("is_available")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  seller        User           @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  messages      Message[]
+  conversations Conversation[]
+
+  @@index([sellerId])
+  @@index([category])
+  @@index([price])
+  @@index([createdAt])
+  @@map("products")
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  senderId   String   @map("sender_id")
+  receiverId String   @map("receiver_id")
+  productId  String   @map("product_id")
+  content    String
+  isRead     Boolean  @default(false) @map("is_read")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  // Relations
+  sender   User    @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User    @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+  product  Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([productId])
+  @@index([createdAt])
+  @@map("messages")
+}
+
+model Conversation {
+  id              String   @id @default(cuid())
+  user1Id         String   @map("user1_id")
+  user2Id         String   @map("user2_id")
+  productId       String   @map("product_id")
+  lastMessageAt   DateTime @default(now()) @map("last_message_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user1   User    @relation("ConversationUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2   User    @relation("ConversationUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([user1Id, user2Id, productId])
+  @@index([user1Id])
+  @@index([user2Id])
+  @@index([productId])
+  @@index([lastMessageAt])
+  @@map("conversations")
+}
+
+enum Condition {
+  NEW
+  LIKE_NEW
+  GOOD
+  FAIR
+  POOR
+
+  @@map("condition_enum")
+}
+
+enum Category {
+  BOOKS
+  ELECTRONICS
+  FURNITURE
+  CLOTHING
+  SPORTS
+  FOOD
+  OTHER
+
+  @@map("category_enum")
+} 
