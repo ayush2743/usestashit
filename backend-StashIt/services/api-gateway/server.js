@@ -7,7 +7,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.API_GATEWAY_PORT || 3000;
+const PORT = process.env.PORT || process.env.API_GATEWAY_PORT || 3000;
 
 // Security middleware
 app.use(helmet());
@@ -45,44 +45,54 @@ app.get('/health', (req, res) => {
 });
 
 // Service proxy configurations
+const isDevelopment = process.env.NODE_ENV === 'development';
+
+const getServiceUrl = (port, service) => {
+  if (isDevelopment) {
+    return `http://localhost:${port}`;
+  }
+  // In production, all services run in the same process
+  return `http://localhost:${process.env.PORT || 3000}`;
+};
+
 const services = {
   auth: {
-    target: `http://localhost:${process.env.AUTH_SERVICE_PORT || 3001}`,
+    target: getServiceUrl(process.env.AUTH_SERVICE_PORT || 3001, 'auth'),
     changeOrigin: true,
     pathRewrite: {
-      '^/api/auth': '/auth' // <-- keep '/auth' prefix
+      '^/api/auth': '/auth'
     }
   },
   user: {
-    target: `http://localhost:${process.env.USER_SERVICE_PORT || 3002}`,
+    target: getServiceUrl(process.env.USER_SERVICE_PORT || 3002, 'user'),
     changeOrigin: true,
     pathRewrite: {
       '^/api/users': '/users'
     }
   },
   product: {
-    target: `http://localhost:${process.env.PRODUCT_SERVICE_PORT || 3003}`,
+    target: getServiceUrl(process.env.PRODUCT_SERVICE_PORT || 3003, 'product'),
     changeOrigin: true,
     pathRewrite: {
       '^/api/products': '/products'
     }
   },
   search: {
-    target: `http://localhost:${process.env.SEARCH_SERVICE_PORT || 3004}`,
+    target: getServiceUrl(process.env.SEARCH_SERVICE_PORT || 3004, 'search'),
     changeOrigin: true,
     pathRewrite: {
       '^/api/search': '/search'
     }
   },
   messaging: {
-    target: `http://localhost:${process.env.MESSAGING_SERVICE_PORT || 3005}`,
+    target: getServiceUrl(process.env.MESSAGING_SERVICE_PORT || 3005, 'messaging'),
     changeOrigin: true,
     pathRewrite: {
       '^/api/messages': '/messages'
     }
   },
   wishlist: {
-    target: `http://localhost:${process.env.WISHLIST_SERVICE_PORT || 3006}`,
+    target: getServiceUrl(process.env.WISHLIST_SERVICE_PORT || 3006, 'wishlist'),
     changeOrigin: true,
     pathRewrite: {
       '^/api/wishlist': '/wishlist'
