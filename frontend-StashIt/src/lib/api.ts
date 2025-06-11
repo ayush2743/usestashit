@@ -1,7 +1,10 @@
 import axios from 'axios';
+import dotenv from 'dotenv';
+dotenv.config();
 
 // API Gateway runs on port 3000; all requests go through the gateway
-const API_BASE_URL = 'http://localhost:3000/api';
+
+const API_BASE_URL = process.env.REACT_APP_PROD ? process.env.REACT_APP_BACKEND_URL : 'http://localhost:3000/api';
 
 // Create axios instance
 export const api = axios.create({
