@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
-const rateLimit = require('express-rate-limit');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 require('dotenv').config();
 
@@ -12,17 +11,6 @@ const PORT = process.env.PORT || process.env.API_GATEWAY_PORT || 3000;
 // Security middleware
 app.use(helmet());
 app.use(cors());
-
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 5 * 60 * 1000, // 5 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: {
-    success: false,
-    message: 'Too many requests from this IP, please try again later.'
-  }
-});
-app.use(limiter);
 
 // Logging
 app.use(morgan('combined'));

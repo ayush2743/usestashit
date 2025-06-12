@@ -32,7 +32,7 @@ const Register: React.FC = () => {
     }
     
     if (!collegeEmailRegex.test(email)) {
-      return 'Please use your college email address (.edu, .ac.in, etc.)';
+      return 'Please use your college email address (@university.edu, @university.ac.in, etc.)';
     }
     
     return null;
@@ -184,7 +184,7 @@ const Register: React.FC = () => {
                 <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
               </div>
               <p className="mt-1 text-xs text-gray-500">
-                Must be a valid college email (.edu, .ac.in, etc.)
+                Must be a valid college email (@university.edu, @university.ac.in, etc.)
               </p>
             </div>
 
@@ -209,7 +209,7 @@ const Register: React.FC = () => {
 
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                Phone number (optional)
+                Phone number
               </label>
               <div className="mt-1 relative">
                 <input

@@ -88,16 +88,7 @@ function AppContent() {
               <Profile />
             </ProtectedRoute>
           } />
-          
-          <Route path="/my-products" element={
-            <ProtectedRoute>
-              <div className="container mx-auto px-4 py-8">
-                <h1 className="text-2xl font-bold">My Products - Coming Soon</h1>
-                <p>This page will show user's listed products.</p>
-              </div>
-            </ProtectedRoute>
-          } />
-
+        
           <Route path="/search" element={
             <div className="container mx-auto px-4 py-8">
               <h1 className="text-2xl font-bold">Search - Coming Soon</h1>

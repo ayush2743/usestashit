@@ -42,11 +42,12 @@ const Login: React.FC = () => {
     try {
       await login(formData.email, formData.password);
       navigate('/');
-    } catch (error) {
-      // Error handled in context
-    } finally {
+    } catch (error: any) {
+      // Don't do anything here as error is handled in context
       setIsLoading(false);
+      return; // Add return to prevent navigation on error
     }
+    setIsLoading(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -5,7 +5,6 @@ import {
   MessageCircle, 
   User, 
   LogOut, 
-  Settings,
   PlusCircle,
   Menu,
   X,
@@ -109,14 +108,6 @@ const Header: React.FC = () => {
                         Profile
                       </Link>
                       
-                      <Link
-                        to="/my-products"
-                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={() => setIsUserMenuOpen(false)}
-                      >
-                        <Settings className="h-4 w-4 mr-2" />
-                        My Products
-                      </Link>
                       
                       <button
                         onClick={handleLogout}

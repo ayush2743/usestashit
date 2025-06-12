@@ -3,7 +3,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 const { prisma, connectDatabase, healthCheck } = require('../../config/database');
 const { redis, connectRedis } = require('../../config/redis');
 const { userSchemas } = require('../../shared/utils/validation');
@@ -16,15 +15,6 @@ const PORT = process.env.AUTH_SERVICE_PORT || 3001;
 app.use(helmet());
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
-
-// Rate limiting
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // limit each IP to 10 requests per windowMs
-  message: 'Too many authentication attempts, please try again later'
-});
-
-app.use('/auth', authLimiter);
 
 // College email domains for validation
 const COLLEGE_DOMAINS = [

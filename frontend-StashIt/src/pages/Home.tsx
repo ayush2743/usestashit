@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
-  Search, 
   TrendingUp, 
   Users, 
   ShoppingBag,
@@ -30,7 +29,6 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
@@ -52,13 +50,6 @@ const Home: React.FC = () => {
     fetchFeaturedProducts();
   }, []);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/products?q=${encodeURIComponent(searchQuery.trim())}`);
-    }
-  };
-
   const handleCategoryClick = (category: string) => {
     navigate(`/products?category=${category}`);
   };
@@ -73,28 +64,8 @@ const Home: React.FC = () => {
               Find Amazing Deals on Campus
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-blue-100">
-              Buy and sell textbooks, electronics, furniture, and more with fellow students
+              Buy and sell textbooks, electronics, food, and more with fellow students
             </p>
-            
-            {/* Hero Search */}
-            <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="What are you looking for?"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 text-lg rounded-full text-gray-900 focus:outline-none focus:ring-4 focus:ring-blue-300"
-                />
-                <Search className="absolute left-4 top-4 h-6 w-6 text-gray-400" />
-                <button
-                  type="submit"
-                  className="absolute right-2 top-2 px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
-                >
-                  Search
-                </button>
-              </div>
-            </form>
           </div>
         </div>
       </div>
@@ -145,7 +116,7 @@ const Home: React.FC = () => {
                 <button
                   key={category.value}
                   onClick={() => handleCategoryClick(category.value)}
-                  className="flex flex-col items-center p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-200 hover:border-gray-300"
+                  className="flex flex-col items-center p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-200 hover:border-gray-300 cursor-pointer"
                 >
                   <div className={`w-12 h-12 ${category.color} rounded-lg flex items-center justify-center mb-3`}>
                     <Icon className="h-6 w-6 text-white" />
